@@ -33,12 +33,12 @@ app.get('/api/users/:userId', async (request, response) => {
 });
 
 app.post('/api/users', async (request, response) => {
-  const getUserByEmail = new PostgresGetUserByEmailRepository();
+  const getUserByEmailRepository = new PostgresGetUserByEmailRepository();
   const createUserRepository = new PostgresCreateUserRepository();
 
   const createUserUseCase = new CreateUserUseCase(
-    getUserByEmail,
-    createUserRepository
+    createUserRepository,
+    getUserByEmailRepository
   );
 
   const createUserController = new CreateUserController(createUserUseCase);
