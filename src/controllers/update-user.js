@@ -3,9 +3,9 @@ import {
   checkIfEmailIsValid,
   checkIfIdIsValid,
   checkIfPasswordIsValid,
-  EmailAlreadyInUseResponse,
-  InvalidIdResponse,
-  InvalidPasswordResponse,
+  emailIsAlreadyInUseResponse,
+  invalidIdResponse,
+  invalidPasswordResponse,
   badRequest,
   ok,
   serverError,
@@ -15,6 +15,7 @@ export class UpdateUserController {
   constructor(updateUserUseCase) {
     this.updateUserUseCase = updateUserUseCase;
   }
+
   async execute(httpRequest) {
     try {
       const userId = httpRequest.params.userId;
@@ -22,7 +23,7 @@ export class UpdateUserController {
       const isIdValid = checkIfIdIsValid(userId);
 
       if (!isIdValid) {
-        return InvalidIdResponse();
+        return invalidIdResponse();
       }
 
       const params = httpRequest.body;
@@ -43,7 +44,7 @@ export class UpdateUserController {
         const passwordIsValid = checkIfPasswordIsValid(params.password);
 
         if (!passwordIsValid) {
-          return InvalidPasswordResponse();
+          return invalidPasswordResponse();
         }
       }
 
@@ -51,7 +52,7 @@ export class UpdateUserController {
         const emailIsValid = checkIfEmailIsValid(params.email);
 
         if (!emailIsValid) {
-          return EmailAlreadyInUseResponse();
+          return emailIsAlreadyInUseResponse();
         }
       }
 

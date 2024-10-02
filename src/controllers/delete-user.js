@@ -1,25 +1,27 @@
 import {
   checkIfIdIsValid,
-  InvalidIdResponse,
+  invalidIdResponse,
+  userNotFoundResponse,
   ok,
   serverError,
-  userNotFoundResponse,
 } from './helpers/index.js';
 
 export class DeleteUserController {
-  constructor(deleteUserUsecase) {
-    this.deleteUserUsecase = deleteUserUsecase;
+  constructor(deleteUserUseCase) {
+    this.deleteUserUseCase = deleteUserUseCase;
   }
+
   async execute(httpRequest) {
     try {
       const userId = httpRequest.params.userId;
+
       const idIsValid = checkIfIdIsValid(userId);
 
       if (!idIsValid) {
-        return InvalidIdResponse();
+        return invalidIdResponse();
       }
 
-      const deletedUser = await this.deleteUserUsecase.execute(userId);
+      const deletedUser = await this.deleteUserUseCase.execute(userId);
 
       if (!deletedUser) {
         return userNotFoundResponse();

@@ -2,8 +2,8 @@ import { EmailAlreadyInUseError } from '../errors/user.js';
 import {
   checkIfEmailIsValid,
   checkIfPasswordIsValid,
-  EmailAlreadyInUseResponse,
-  InvalidPasswordResponse,
+  emailIsAlreadyInUseResponse,
+  invalidPasswordResponse,
   badRequest,
   created,
   serverError,
@@ -13,6 +13,7 @@ export class CreateUserController {
   constructor(createUserUseCase) {
     this.createUserUseCase = createUserUseCase;
   }
+
   async execute(httpRequest) {
     try {
       const params = httpRequest.body;
@@ -20,7 +21,7 @@ export class CreateUserController {
       const requiredFields = ['first_name', 'last_name', 'email', 'password'];
 
       for (const field of requiredFields) {
-        if (!params[field] || params[field].trim().lenght === 0) {
+        if (!params[field] || params[field].trim().length === 0) {
           return badRequest({ message: `Missing param: ${field}` });
         }
       }
@@ -28,13 +29,13 @@ export class CreateUserController {
       const passwordIsValid = checkIfPasswordIsValid(params.password);
 
       if (!passwordIsValid) {
-        return InvalidPasswordResponse();
+        return invalidPasswordResponse();
       }
 
       const emailIsValid = checkIfEmailIsValid(params.email);
 
       if (!emailIsValid) {
-        return EmailAlreadyInUseResponse();
+        return emailIsAlreadyInUseResponse();
       }
 
       const createdUser = await this.createUserUseCase.execute(params);
@@ -44,8 +45,8 @@ export class CreateUserController {
       if (error instanceof EmailAlreadyInUseError) {
         return badRequest({ message: error.message });
       }
-      console.error(error);
 
+      console.error(error);
       return serverError();
     }
   }

@@ -1,4 +1,4 @@
-export class GetUserByIDUseCase {
+export class GetUserByIdUseCase {
   constructor(getUserByIdRepository) {
     this.getUserByIdRepository = getUserByIdRepository;
   }
