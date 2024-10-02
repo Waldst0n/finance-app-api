@@ -6,9 +6,10 @@ import {
   serverError,
 } from './helpers/index.js';
 
-import { GetUserByIDUseCase } from '../use-cases/index.js';
-
 export class GetUserByIdController {
+  constructor(getUserByIdUseCase) {
+    this.getUserByIdUseCase = getUserByIdUseCase;
+  }
   async execute(httpRequest) {
     try {
       const isIdValid = checkIfIdIsValid(httpRequest.params.userId);
@@ -16,9 +17,9 @@ export class GetUserByIdController {
         return InvalidIdResponse();
       }
 
-      const getUserByIdUSecase = new GetUserByIDUseCase();
-
-      const user = await getUserByIdUSecase.execute(httpRequest.params.userId);
+      const user = await this.getUserByIdUseCase.execute(
+        httpRequest.params.userId
+      );
 
       if (!user) {
         return userNotFoundResponse();
