@@ -4,16 +4,17 @@ import bcrypt from 'bcrypt';
 import { EmailAlreadyInUseError } from '../errors/user.js';
 
 export class CreateUserUseCase {
-  constructor(createUserRepository, getUserByEmailRepository) {
+  constructor(getUserByEmailRepository, createUserRepository) {
     this.getUserByEmailRepository = getUserByEmailRepository;
     this.createUserRepository = createUserRepository;
   }
+
   async execute(createUserParams) {
-    const userWithProviderEmail = await this.getUserByEmailRepository.execute(
+    const userWithProvidedEmail = await this.getUserByEmailRepository.execute(
       createUserParams.email
     );
 
-    if (userWithProviderEmail) {
+    if (userWithProvidedEmail) {
       throw new EmailAlreadyInUseError(createUserParams.email);
     }
 
@@ -27,8 +28,8 @@ export class CreateUserUseCase {
       password: hashedPassword,
     };
 
-    const createUser = await this.createUserRepository.execute(user);
+    const createdUser = await this.createUserRepository.execute(user);
 
-    return createUser;
+    return createdUser;
   }
 }
